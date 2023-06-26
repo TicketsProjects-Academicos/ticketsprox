@@ -1,0 +1,537 @@
+// import 'package:fluent_ui/fluent_ui.dart';
+
+import 'package:flutter/material.dart';
+// import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+// import 'package:flutter_datetime_picker/src/datetime_picker_theme.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:intl/intl.dart';
+// import 'dart:io';
+// import 'package:http/http.dart';
+
+class Eventos extends StatefulWidget {
+  const Eventos({super.key});
+
+  @override
+  State<Eventos> createState() => _EventosState();
+}
+
+class _EventosState extends State<Eventos> {
+  final _formkey = GlobalKey<FormState>();
+
+
+  DateTime Fechas = DateTime.now();
+
+  Future<void> enviarEvento() async {
+    var url = Uri.parse('http://www.ticketsproxapia.somee.com/api/Eventos');
+
+    DateTime fechaEvento = DateTime.now();
+
+    // Formatear la fecha como una cadena en el formato 'yyyy-MM-ddTHH:mm:ss'
+    String fechaFormateada =
+        DateFormat('yyyy-MM-ddTHH:mm:ss').format(fechaEvento);
+
+    // Datos del evento y sus secciones
+    var data = {
+      "id": 0,
+      "nombreEvento": nombreEvento,
+      "descripcion": Descripcion,
+      "image": Image,
+      "lugarEvento": LugarEvento,
+      "tipoEvento": OpcionSelect,
+      "capacidadTotal": Capacidad,
+      "fechaEvento": fechaFormateada,
+      "hora": Hora,
+    };
+
+    print('Data: $data');
+    var jsonData = jsonEncode(data);
+
+    try {
+      var response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonData,
+      );
+
+      if (response.statusCode == 200) {
+        print('Evento creado con éxito');
+
+        print('Error al crear el evento: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
+  String nombreEvento = '';
+  String LugarEvento = '';
+  List<String> TipoEvento = [
+    'Selecciona una opción',
+    'Artes y Teatro',
+    'Concierto',
+    'Conferencia',
+    'Educativo'
+  ];
+
+  String OpcionSelect = 'Selecciona una opción';
+
+  int Capacidad = 0;
+  String fecha = '';
+  String Hora = '';
+  String seccion = '';
+  double precioPorTicket = 0.0;
+  int cantidadPorSeccion = 0;
+  String Image = '';
+  String Descripcion = '';
+
+
+
+
+  void SaveEvento() {
+    bool _isValid = _formkey.currentState!.validate();
+  FocusScope.of(context).unfocus();
+
+  if (_isValid) {
+    _formkey.currentState!.save();
+
+    enviarEvento();
+    _formkey.currentState!.reset();
+
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Detalle del Evento'),
+            contentPadding: const EdgeInsets.all(20),
+            content: const Text('Evento Guardado'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('Cerrar'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+
+
+
+  bool isNumeric(String? num) {
+    if (num == null) {
+      return false;
+    }
+
+    return double.tryParse(num) != null;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Event Form'),
+      ),
+      body: Card(
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(
+            Radius.circular(20),
+          ),
+        ),
+        margin: const EdgeInsets.all(30),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Form(
+              key: _formkey,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text(
+                    "Datos del evento",
+                    style: TextStyle(fontSize: 20),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Row(
+                    children: [
+                      Container(
+                        width: 400,
+                        height: 50,
+                        child: TextFormField(
+                          validator: (value) {
+                            if (value == null) {
+                              return 'Please enter a valid Nombre de Evento';
+                            }
+                            return null;
+                          },
+                          key: const ValueKey('nombreEvento'),
+                          keyboardType: TextInputType.name,
+                          decoration: const InputDecoration(
+                            labelText: 'Nombre Evento',
+                            border: OutlineInputBorder(),
+                          ),
+                          onSaved: (value) {
+                            nombreEvento = value as String;
+                          },
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 20,
+                      ),
+                      Container(
+                        width: 400,
+                        height: 50,
+                        child: TextFormField(
+                          key: const ValueKey('LugarEvento'),
+                          keyboardType: TextInputType.name,
+                          decoration: const InputDecoration(
+                            labelText: 'Lugar Evento',
+                            border: OutlineInputBorder(),
+                          ),
+                          onSaved: (value) {
+                            LugarEvento = value as String;
+                          },
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 20,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+
+                  Row(
+                    children: [
+                      Container(
+                        width: 600,
+                        height: 50,
+                        child: TextFormField(
+                          validator: (value) {
+                            if (value == null) {
+                              return 'Please enter a valid Image';
+                            }
+                            return null;
+                          },
+                          key: const ValueKey('Image'),
+                          keyboardType: TextInputType.name,
+                          decoration: const InputDecoration(
+                            labelText: 'Image',
+                            border: OutlineInputBorder(),
+                          ),
+                          onSaved: (value) {
+                            Image = value as String;
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 20,),
+
+                  Row(
+                    children: [
+                      Container(
+                        width: 600,
+                        height: 50,
+                        child: TextFormField(
+                          validator: (value) {
+                            if (value == null) {
+                              return 'Please enter a valid Descripcion';
+                            }
+                            return null;
+                          },
+                          key: const ValueKey('Descripcion'),
+                          keyboardType: TextInputType.name,
+                          decoration: const InputDecoration(
+                            labelText: 'Descripcion',
+                            border: OutlineInputBorder(),
+                          ),
+                          onSaved: (value) {
+                            Descripcion = value as String;
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Row(
+                    children: [
+                      Container(
+                        width: 400,
+                        height: 50,
+                        child: DropdownButtonFormField<String>(
+                          value: OpcionSelect,
+                          items: TipoEvento.map((String opcion) {
+                            return DropdownMenuItem<String>(
+                              value: opcion,
+                              child: Text(opcion),
+                            );
+                          }).toList(),
+                          onChanged: (String? value) {
+                            setState(() {
+                              OpcionSelect = value!;
+                            });
+                          },
+                          decoration: const InputDecoration(
+                              labelText: 'Selecciona una opción',
+                              border: OutlineInputBorder()),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 20,
+                      ),
+                      Container(
+                        width: 400,
+                        height: 50,
+                        child: TextFormField(
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter a valid Capacidad';
+                            }
+                            return null;
+                          },
+                          key: const ValueKey('Capacidad'),
+                          keyboardType: TextInputType.number,
+                          decoration: const InputDecoration(
+                              labelText: 'Capacidad',
+                              border: OutlineInputBorder()),
+                          onSaved: (newValue) {
+                            Capacidad = int.parse(newValue!);
+                          },
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 20,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Row(
+                    children: [
+                      Container(
+                          width: 400,
+                          height: 50,
+                          child: TextFormField(
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter a valid Fecha';
+                              }
+
+                              return null;
+                            },
+                            key: const ValueKey('Fecha'),
+                            keyboardType: TextInputType.datetime,
+                            decoration: const InputDecoration(
+                                labelText: 'Fecha',
+                                border: OutlineInputBorder()),
+                            onSaved: (newValue) {
+                              fecha = newValue as String;
+                            },
+                          )),
+                      const SizedBox(
+                        width: 20,
+                      ),
+                      Container(
+                        width: 400,
+                        height: 50,
+                        child: TextFormField(
+                          validator: (value) {
+                            if (value == null) {
+                              return 'Please enter a valid Hora';
+                            }
+
+                            return null;
+                          },
+                          key: const ValueKey('Hora'),
+                          keyboardType: TextInputType.text,
+                          decoration: const InputDecoration(
+                              labelText: 'Hora', border: OutlineInputBorder()),
+                          onSaved: (newValue) {
+                            Hora = newValue as String;
+                          },
+                        ),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+
+                  const SizedBox(
+                    height: 20,
+                  ),
+
+                  // Form(
+                  //   key: _formkeyD,
+                  //   child: Column(
+                  //       crossAxisAlignment: CrossAxisAlignment.start,
+                  //       children: [
+                  //         const Text(
+                  //           'Detalle del Evento',
+                  //           style: TextStyle(fontSize: 20),
+                  //         ),
+                  //         const SizedBox(height: 20),
+
+                  //         Row(
+                  //           children: [
+
+                  //             Container(
+                  //               height: 60,
+                  //               child: ElevatedButton(
+                  //                 onPressed: _AggsubmitD,
+                  //                 child: const Text(
+                  //                   'Agregar',
+                  //                   style: TextStyle(fontSize: 18),
+                  //                 ),
+                  //               ),
+                  //             ),
+                  //             const SizedBox(
+                  //               height: 20,
+                  //             ),
+                  //           ],
+                  //         ),
+                  //         const SizedBox(height: 20),
+
+                  //         //Table
+                  //         Container(
+                  //           width: 800,
+                  //           height: 80,
+                  //           child: Padding(
+                  //             padding: EdgeInsets.all(8.0),
+                  //             child: Table(
+                  //               border: TableBorder.all(),
+                  //               defaultColumnWidth:
+                  //                   const FixedColumnWidth(120.0),
+                  //               children: [
+                  //                 const TableRow(
+                  //                   children: [
+                  //                     TableCell(
+                  //                       child: Padding(
+                  //                         padding: EdgeInsets.all(8.0),
+                  //                         child: Text(
+                  //                           'Seccion',
+                  //                           style: TextStyle(
+                  //                               fontWeight: FontWeight.bold,
+                  //                               fontSize: 16),
+                  //                         ),
+                  //                       ),
+                  //                     ),
+                  //                     TableCell(
+                  //                       child: Padding(
+                  //                         padding: EdgeInsets.all(8.0),
+                  //                         child: Text('Precio',
+                  //                             style: TextStyle(
+                  //                                 fontWeight: FontWeight.bold,
+                  //                                 fontSize: 16)),
+                  //                       ),
+                  //                     ),
+                  //                     TableCell(
+                  //                       child: Padding(
+                  //                         padding: EdgeInsets.all(8.0),
+                  //                         child: Text('Capacidad',
+                  //                             style: TextStyle(
+                  //                                 fontWeight: FontWeight.bold)),
+                  //                       ),
+                  //                     ),
+                  //                     TableCell(
+                  //                       child: Padding(
+                  //                         padding: EdgeInsets.all(8.0),
+                  //                         child: Text('Eliminar',
+                  //                             style: TextStyle(
+                  //                                 fontWeight: FontWeight.bold)),
+                  //                       ),
+                  //                     ),
+                  //                   ],
+                  //                 ),
+                  //                 ...secciones.asMap().entries.map((entry) {
+                  //                   final index = entry.key;
+                  //                   final seccionT = entry.value;
+                  //                   return TableRow(
+                  //                     children: [
+                  //                       TableCell(
+                  //                         child: Padding(
+                  //                           padding: const EdgeInsets.all(8.0),
+                  //                           child: Text(seccionT['seccion']),
+                  //                         ),
+                  //                       ),
+                  //                       TableCell(
+                  //                         child: Padding(
+                  //                           padding: const EdgeInsets.all(8.0),
+                  //                           child: Text(
+                  //                               seccionT['precio'].toString()),
+                  //                         ),
+                  //                       ),
+                  //                       TableCell(
+                  //                         child: Padding(
+                  //                           padding: const EdgeInsets.all(8.0),
+                  //                           child: Text(seccionT['capacidad']
+                  //                               .toString()),
+                  //                         ),
+                  //                       ),
+                  //                       TableCell(
+                  //                           child: Padding(
+                  //                         padding: const EdgeInsets.all(8.0),
+                  //                         child: IconButton(
+                  //                           onPressed: () {
+                  //                             eliminarFila(index);
+                  //                           },
+                  //                           icon: const Icon(Icons.delete),
+                  //                         ),
+                  //                       ))
+                  //                     ],
+                  //                   );
+                  //                 }).toList(),
+                  //               ],
+                  //             ),
+
+                  //           ),
+                  //         ),
+
+                  //       ]),
+                  // ),
+
+                  const SizedBox(
+                    height: 50,
+                  ),
+                  Container(
+                    height: 60,
+                    child: ElevatedButton(
+                      onPressed: SaveEvento,
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      child: const Text(
+                        'Submit Form',
+                        style: TextStyle(fontSize: 18),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
