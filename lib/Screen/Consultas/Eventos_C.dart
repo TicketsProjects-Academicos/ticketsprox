@@ -29,7 +29,6 @@ class _EventosCosultaState extends State<EventosCosulta> {
       var response = await http.get(url);
 
       if (response.statusCode == 200) {
-        // La solicitud fue exitosa, puedes procesar los datos aquí
         var data = json.decode(response.body);
         setState(() {
           eventos = data;
@@ -37,11 +36,11 @@ class _EventosCosultaState extends State<EventosCosulta> {
         print('response.body: $data');
         print('Eventos: $eventos');
       } else {
-        // La solicitud falló
+
         print('Error: ${response.statusCode}');
       }
     } catch (e) {
-      // Ocurrió un error en la solicitud
+
       print('Error: $e');
     }
   }

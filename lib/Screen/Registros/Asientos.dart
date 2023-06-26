@@ -34,40 +34,7 @@ class _AsientosState extends State<Asientos> {
     setState(() {
       OpcionEvent = valor!;
       fetchDataAsiento(valor);
-      // List<Map<String, dynamic>> filteredSeccion = [];
-      // for (var seccion in ListSecciones) {
-      //   eventos.forEach((opcion) {
-      //     if (opcion['nombreEvento'] == valor) {
-      //       // idseleccionadoevent = opcion['idEventos'];
-      //       print('Id selecionado: ');
-      //       print(opcion['idEventos']);
-      //       return; // Detener la iteración
-      //     }
-      //   });
 
-      //   if (seccion['idEventos'] == idseleccionadoevent) {
-      //     var filtereseccion = {
-      //       'idSecciones': seccion['idSecciones'],
-      //       'idEventos': seccion['idEventos'],
-      //       'nombreSeccion': seccion['nombreSeccion'],
-      //       'capacidad': seccion['capacidad']
-      //     };
-      //     filteredSeccion.add(filtereseccion);
-      //   }
-      // }
-
-      // eventos.forEach((opcion) {
-      //   if (opcion['nombreEvento'] == OpcionEvent) {
-      //     for (var secionesfil in ListSecciones) {
-      //       if (opcion['idEventos'] == secionesfil['idEventos']) {
-      //         // SeccionBuscada = secionesfil;
-      //         print('Seccion Buscada: $secionesfil');
-      //         print('Evento relacionado: $opcion');
-      //       }
-      //     }
-
-      //   }
-      // });
     });
   }
 
@@ -78,7 +45,7 @@ class _AsientosState extends State<Asientos> {
     try {
       var SeccionResponse = await http.get(urlSeccion);
       if (SeccionResponse.statusCode == 200) {
-        //........
+
 
         var dataseccion = jsonDecode(SeccionResponse.body);
         List<Map<String, dynamic>> filteredSeccion = [];
@@ -88,8 +55,6 @@ class _AsientosState extends State<Asientos> {
         for (var seccion in dataseccion) {
           eventos.forEach((opcion) {
             if (opcion['nombreEvento'] == valor) {
-              // idseleccionadoevent = opcion['idEventos'];
-              // print('Original isnkjdasdnasdnaks $idseccionselect');
               if (seccion['idEventos'] == opcion['idEventos']) {
                 var filtereseccion = {
                   'idSecciones': seccion['idSecciones'],
@@ -100,7 +65,7 @@ class _AsientosState extends State<Asientos> {
                 filteredSeccion.add(filtereseccion);
                 print('KLK FLUTTER FILTRAME LO QUE QIERO: $filteredSeccion');
               }
-              return; // Detener la iteración
+              return; 
             }
           });
         }
@@ -128,7 +93,6 @@ class _AsientosState extends State<Asientos> {
     try {
       var EventoResponse = await http.get(urlEvento);
 
-      //Eventos
 
       if (EventoResponse.statusCode == 200) {
         var dataEvento = json.decode(EventoResponse.body);
@@ -151,7 +115,7 @@ class _AsientosState extends State<Asientos> {
         print('Error: ${EventoResponse.statusCode}');
       }
 
-      //secciones
+
     } catch (e) {
       print('Error: $e');
     }
@@ -237,14 +201,14 @@ class _AsientosState extends State<Asientos> {
   int capacidadselect = 0;
 
   void GnerarAsiento() {
-    // int cant = 5;
+
     secciones.forEach((opcion) {
       if (opcion['nombreSeccion'] == OpcionSeccion) {
         idseccionselect = opcion['idSecciones'];
         capacidadselect = opcion['capacidad'];
         print('Select $capacidadselect');
         print('Select id $idseccionselect');
-        return; // Detener la iteración
+        return; 
       }
     });
 
@@ -373,40 +337,3 @@ class _AsientosState extends State<Asientos> {
   }
 }
 
-
-  // var dataseccion = jsonDecode(SeccionResponse.body);
-        // List<Map<String, dynamic>> FilteredSeccion = [];
-
-        // print('Esto debe ser todas las secciones: $dataseccion');
-
-        // for (var seccion in dataseccion) {
-
-        //   if (seccion['idEventos'] == idseleccionadoevent) {
-        //     var filtereseccion = {
-        //       'idSecciones': seccion['idSecciones'],
-        //       'idEventos': seccion['idEventos'],
-        //       'nombreSeccion': seccion['nombreSeccion'],
-        //       'capacidad': seccion['capacidad']
-        //     };
-        //     FilteredSeccion.add(filtereseccion);
-        //   }
-        //   if (seccion['idEventos'] == idseleccionadoevent) {
-        //     print('Muestraknjkdndsjk');
-        //     var filteredEvento = {
-        //       'idSecciones': seccion['idSecciones'],
-        //       'idEventos': seccion['idEventos'],
-        //       'nombreSeccion': seccion['nombreSeccion'],
-        //       'capacidad': seccion['capacidad']
-        //     };
-        //     FilteredSeccion.add(filteredEvento);
-        //   }
-        // }
-
-        // setState(() {
-        //   secciones = FilteredSeccion;
-        //   if (secciones.isNotEmpty) {
-        //     OpcionEvent = eventos[0]['nombreEvento'];
-        //   }
-        // });
-
-        // print('Secciones: $secciones');

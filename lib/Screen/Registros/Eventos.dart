@@ -1,4 +1,3 @@
-// import 'package:fluent_ui/fluent_ui.dart';
 
 import 'package:flutter/material.dart';
 // import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
@@ -6,8 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:intl/intl.dart';
-// import 'dart:io';
-// import 'package:http/http.dart';
+
 
 class Eventos extends StatefulWidget {
   const Eventos({super.key});
@@ -27,11 +25,10 @@ class _EventosState extends State<Eventos> {
 
     DateTime fechaEvento = DateTime.now();
 
-    // Formatear la fecha como una cadena en el formato 'yyyy-MM-ddTHH:mm:ss'
     String fechaFormateada =
         DateFormat('yyyy-MM-ddTHH:mm:ss').format(fechaEvento);
 
-    // Datos del evento y sus secciones
+
     var data = {
       "id": 0,
       "nombreEvento": nombreEvento,
@@ -378,134 +375,7 @@ class _EventosState extends State<Eventos> {
                     height: 20,
                   ),
 
-                  // Form(
-                  //   key: _formkeyD,
-                  //   child: Column(
-                  //       crossAxisAlignment: CrossAxisAlignment.start,
-                  //       children: [
-                  //         const Text(
-                  //           'Detalle del Evento',
-                  //           style: TextStyle(fontSize: 20),
-                  //         ),
-                  //         const SizedBox(height: 20),
 
-                  //         Row(
-                  //           children: [
-
-                  //             Container(
-                  //               height: 60,
-                  //               child: ElevatedButton(
-                  //                 onPressed: _AggsubmitD,
-                  //                 child: const Text(
-                  //                   'Agregar',
-                  //                   style: TextStyle(fontSize: 18),
-                  //                 ),
-                  //               ),
-                  //             ),
-                  //             const SizedBox(
-                  //               height: 20,
-                  //             ),
-                  //           ],
-                  //         ),
-                  //         const SizedBox(height: 20),
-
-                  //         //Table
-                  //         Container(
-                  //           width: 800,
-                  //           height: 80,
-                  //           child: Padding(
-                  //             padding: EdgeInsets.all(8.0),
-                  //             child: Table(
-                  //               border: TableBorder.all(),
-                  //               defaultColumnWidth:
-                  //                   const FixedColumnWidth(120.0),
-                  //               children: [
-                  //                 const TableRow(
-                  //                   children: [
-                  //                     TableCell(
-                  //                       child: Padding(
-                  //                         padding: EdgeInsets.all(8.0),
-                  //                         child: Text(
-                  //                           'Seccion',
-                  //                           style: TextStyle(
-                  //                               fontWeight: FontWeight.bold,
-                  //                               fontSize: 16),
-                  //                         ),
-                  //                       ),
-                  //                     ),
-                  //                     TableCell(
-                  //                       child: Padding(
-                  //                         padding: EdgeInsets.all(8.0),
-                  //                         child: Text('Precio',
-                  //                             style: TextStyle(
-                  //                                 fontWeight: FontWeight.bold,
-                  //                                 fontSize: 16)),
-                  //                       ),
-                  //                     ),
-                  //                     TableCell(
-                  //                       child: Padding(
-                  //                         padding: EdgeInsets.all(8.0),
-                  //                         child: Text('Capacidad',
-                  //                             style: TextStyle(
-                  //                                 fontWeight: FontWeight.bold)),
-                  //                       ),
-                  //                     ),
-                  //                     TableCell(
-                  //                       child: Padding(
-                  //                         padding: EdgeInsets.all(8.0),
-                  //                         child: Text('Eliminar',
-                  //                             style: TextStyle(
-                  //                                 fontWeight: FontWeight.bold)),
-                  //                       ),
-                  //                     ),
-                  //                   ],
-                  //                 ),
-                  //                 ...secciones.asMap().entries.map((entry) {
-                  //                   final index = entry.key;
-                  //                   final seccionT = entry.value;
-                  //                   return TableRow(
-                  //                     children: [
-                  //                       TableCell(
-                  //                         child: Padding(
-                  //                           padding: const EdgeInsets.all(8.0),
-                  //                           child: Text(seccionT['seccion']),
-                  //                         ),
-                  //                       ),
-                  //                       TableCell(
-                  //                         child: Padding(
-                  //                           padding: const EdgeInsets.all(8.0),
-                  //                           child: Text(
-                  //                               seccionT['precio'].toString()),
-                  //                         ),
-                  //                       ),
-                  //                       TableCell(
-                  //                         child: Padding(
-                  //                           padding: const EdgeInsets.all(8.0),
-                  //                           child: Text(seccionT['capacidad']
-                  //                               .toString()),
-                  //                         ),
-                  //                       ),
-                  //                       TableCell(
-                  //                           child: Padding(
-                  //                         padding: const EdgeInsets.all(8.0),
-                  //                         child: IconButton(
-                  //                           onPressed: () {
-                  //                             eliminarFila(index);
-                  //                           },
-                  //                           icon: const Icon(Icons.delete),
-                  //                         ),
-                  //                       ))
-                  //                     ],
-                  //                   );
-                  //                 }).toList(),
-                  //               ],
-                  //             ),
-
-                  //           ),
-                  //         ),
-
-                  //       ]),
-                  // ),
 
                   const SizedBox(
                     height: 50,

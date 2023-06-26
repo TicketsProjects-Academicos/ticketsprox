@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-// import 'package:intl/intl.dart';
-// import 'dart:io';
-// import 'package:http/http.dart';
 class DetalleEvento extends StatefulWidget {
   const DetalleEvento({Key? key}) : super(key: key);
 
@@ -45,7 +42,7 @@ class _DetalleEventoState extends State<DetalleEvento> {
           eventos = filteredEventos;
           if (eventos.isNotEmpty) {
             OpcionSelect = eventos[0]['nombreEvento'];
-            // selectedIdEventos = eventos[0]['idEventos'];
+
           }
         });
 
@@ -101,7 +98,7 @@ class _DetalleEventoState extends State<DetalleEvento> {
 
   String OpcionSelect = '';
   int selectedIdEventos = 0;
-  // int selectedselectedIdEventos = 0;
+
 
   String nombreSeccion = '';
   double precioPorTicket = 0.0;
@@ -138,7 +135,6 @@ class _DetalleEventoState extends State<DetalleEvento> {
          
         });
       });
-      // _formKey.currentState!.reset();
       print('Secciones: $secciones');
     }
   }

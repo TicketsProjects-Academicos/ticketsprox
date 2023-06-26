@@ -1,4 +1,4 @@
-// import 'package:fluent_ui/fluent_ui.dart';
+
 import 'package:flutter/material.dart';
 
 class ClientesEventos extends StatefulWidget {
@@ -36,7 +36,7 @@ class _ClientesEventosState extends State<ClientesEventos> {
     print(password);
   }
 
-  //Verificar si la cadena es Numerica
+
   bool isNumeric(String? num) {
     if (num == null) {
       return false;
@@ -186,23 +186,7 @@ class _ClientesEventosState extends State<ClientesEventos> {
                     },
                   ),
 
-                  // TextFormField(
-                  //   validator: (value) {
-                  //     if (value == null || value.length < 6) {
-                  //       return 'Password must be atleast 7 characters';
-                  //     }
-                  //     return null;
-                  //   },
-                  //   key: const ValueKey('password'),
-                  //   decoration: const InputDecoration(
-                  //     labelText: 'UserPassword',
-                  //     border: OutlineInputBorder(),
-                  //   ),
-                  //   obscureText: true,
-                  //   onSaved: (value) {
-                  //     password = value as String;
-                  //   },
-                  // ),
+                 
                   const SizedBox(
                     height: 20,
                   ),
