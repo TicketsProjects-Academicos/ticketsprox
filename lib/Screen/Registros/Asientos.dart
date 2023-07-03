@@ -34,7 +34,6 @@ class _AsientosState extends State<Asientos> {
     setState(() {
       OpcionEvent = valor!;
       fetchDataAsiento(valor);
-
     });
   }
 
@@ -45,8 +44,6 @@ class _AsientosState extends State<Asientos> {
     try {
       var SeccionResponse = await http.get(urlSeccion);
       if (SeccionResponse.statusCode == 200) {
-
-
         var dataseccion = jsonDecode(SeccionResponse.body);
         List<Map<String, dynamic>> filteredSeccion = [];
         ListSecciones = dataseccion;
@@ -65,7 +62,7 @@ class _AsientosState extends State<Asientos> {
                 filteredSeccion.add(filtereseccion);
                 print('KLK FLUTTER FILTRAME LO QUE QIERO: $filteredSeccion');
               }
-              return; 
+              return;
             }
           });
         }
@@ -93,7 +90,6 @@ class _AsientosState extends State<Asientos> {
     try {
       var EventoResponse = await http.get(urlEvento);
 
-
       if (EventoResponse.statusCode == 200) {
         var dataEvento = json.decode(EventoResponse.body);
         List<Map<String, dynamic>> filteredEventos = [];
@@ -114,8 +110,6 @@ class _AsientosState extends State<Asientos> {
       } else {
         print('Error: ${EventoResponse.statusCode}');
       }
-
-
     } catch (e) {
       print('Error: $e');
     }
@@ -145,6 +139,7 @@ class _AsientosState extends State<Asientos> {
 
       if (response.statusCode == 200) {
         print('Evento creado con éxito');
+        _formKey.currentState!.reset();
 
         print('Error al crear el evento: ${response.statusCode}');
       }
@@ -153,45 +148,14 @@ class _AsientosState extends State<Asientos> {
     }
   }
 
-  List<String> generarAsientosAutomaticos(int id, int cap, seccionSe) {
+  List<String> generarAsientosAutomaticos(int id, int cap, String seccionSe) {
     List<String> asientos = [];
     String NumA = '';
 
     for (int i = 1; i <= cap; i++) {
-      if (seccionSe == "Vip") {
-        asientos.add('V$i');
-        NumA = 'V$i';
-        AsientosPost(id, NumA);
-      }
-      if (seccionSe == "Preferencial") {
-        asientos.add('P$i');
-        NumA = 'P$i';
-        AsientosPost(id, NumA);
-      }
-
-      if (seccionSe == "General") {
-        asientos.add('GL$i');
-        NumA = 'GL$i';
-        AsientosPost(id, NumA);
-      }
-
-      if (seccionSe == "Grada") {
-        asientos.add('G$i');
-        NumA = 'G$i';
-        AsientosPost(id, NumA);
-      }
-
-      if (seccionSe == "Gradas") {
-        asientos.add('GA$i');
-        NumA = 'GA$i';
-        AsientosPost(id, NumA);
-      }
-
-      if (seccionSe == "Palcos") {
-        asientos.add('PA$i');
-        NumA = 'PA$i';
-        AsientosPost(id, NumA);
-      }
+      NumA = seccionSe.substring(0, 2);
+      asientos.add('$NumA$i');
+      AsientosPost(id, '$NumA$i');
     }
 
     return asientos;
@@ -201,14 +165,13 @@ class _AsientosState extends State<Asientos> {
   int capacidadselect = 0;
 
   void GnerarAsiento() {
-
     secciones.forEach((opcion) {
       if (opcion['nombreSeccion'] == OpcionSeccion) {
         idseccionselect = opcion['idSecciones'];
         capacidadselect = opcion['capacidad'];
         print('Select $capacidadselect');
         print('Select id $idseccionselect');
-        return; 
+        return;
       }
     });
 
@@ -336,4 +299,3 @@ class _AsientosState extends State<Asientos> {
     );
   }
 }
-

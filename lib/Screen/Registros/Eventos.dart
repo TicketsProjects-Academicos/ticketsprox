@@ -1,11 +1,7 @@
-
 import 'package:flutter/material.dart';
-// import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
-// import 'package:flutter_datetime_picker/src/datetime_picker_theme.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:intl/intl.dart';
-
 
 class Eventos extends StatefulWidget {
   const Eventos({super.key});
@@ -16,18 +12,23 @@ class Eventos extends StatefulWidget {
 
 class _EventosState extends State<Eventos> {
   final _formkey = GlobalKey<FormState>();
+  TextEditingController datacontroller = TextEditingController();
 
+  @override
+  void initState() {
+    super.initState();
+    datacontroller.text = "";
+  }
 
   DateTime Fechas = DateTime.now();
-
+  DateTime fechaEvento = DateTime.now();
   Future<void> enviarEvento() async {
     var url = Uri.parse('http://www.ticketsproxapia.somee.com/api/Eventos');
 
-    DateTime fechaEvento = DateTime.now();
-
     String fechaFormateada =
-        DateFormat('yyyy-MM-ddTHH:mm:ss').format(fechaEvento);
+        DateFormat('yyyy-MM-dd').format(fechaEvento);
 
+    print("Fechas tomada de Input: ${datacontroller.text}");
 
     var data = {
       "id": 0,
@@ -37,7 +38,7 @@ class _EventosState extends State<Eventos> {
       "lugarEvento": LugarEvento,
       "tipoEvento": OpcionSelect,
       "capacidadTotal": Capacidad,
-      "fechaEvento": fechaFormateada,
+      "fechaEvento": datacontroller.text,
       "hora": Hora,
     };
 
@@ -53,10 +54,12 @@ class _EventosState extends State<Eventos> {
         body: jsonData,
       );
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 201) {
         print('Evento creado con éxito');
 
-        print('Error al crear el evento: ${response.statusCode}');
+       
+      }else {
+         print('Error al crear el evento: ${response.statusCode}');
       }
     } catch (e) {
       print('Error: $e');
@@ -84,18 +87,15 @@ class _EventosState extends State<Eventos> {
   String Image = '';
   String Descripcion = '';
 
-
-
-
   void SaveEvento() {
     bool _isValid = _formkey.currentState!.validate();
-  FocusScope.of(context).unfocus();
+    FocusScope.of(context).unfocus();
 
-  if (_isValid) {
-    _formkey.currentState!.save();
+    if (_isValid) {
+      _formkey.currentState!.save();
 
-    enviarEvento();
-    _formkey.currentState!.reset();
+      enviarEvento();
+      _formkey.currentState!.reset();
 
       showDialog(
         context: context,
@@ -117,8 +117,6 @@ class _EventosState extends State<Eventos> {
       );
     }
   }
-
-
 
   bool isNumeric(String? num) {
     if (num == null) {
@@ -205,7 +203,6 @@ class _EventosState extends State<Eventos> {
                   const SizedBox(
                     height: 20,
                   ),
-
                   Row(
                     children: [
                       Container(
@@ -231,9 +228,9 @@ class _EventosState extends State<Eventos> {
                       ),
                     ],
                   ),
-
-                  const SizedBox(height: 20,),
-
+                  const SizedBox(
+                    height: 20,
+                  ),
                   Row(
                     children: [
                       Container(
@@ -259,7 +256,6 @@ class _EventosState extends State<Eventos> {
                       ),
                     ],
                   ),
-
                   const SizedBox(
                     height: 20,
                   ),
@@ -323,18 +319,41 @@ class _EventosState extends State<Eventos> {
                           width: 400,
                           height: 50,
                           child: TextFormField(
+                            controller: datacontroller,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Please enter a valid Fecha';
                               }
-
                               return null;
                             },
                             key: const ValueKey('Fecha'),
                             keyboardType: TextInputType.datetime,
                             decoration: const InputDecoration(
-                                labelText: 'Fecha',
-                                border: OutlineInputBorder()),
+                              labelText: 'Fecha',
+                              border: OutlineInputBorder(),
+                              suffixIcon: Icon(Icons.calendar_today),
+                            ),
+                            readOnly: true,
+                            onTap: () async {
+                              DateTime? pickedDate = await showDatePicker(
+                                context: context,
+                                initialDate: DateTime.now(),
+                                firstDate: DateTime(2000),
+                                lastDate: DateTime(2101),
+                              );
+                              if (pickedDate != null) {
+                                print(pickedDate);
+                                String formattedDate =
+                                    DateFormat('yyyy-MM-dd').format(pickedDate);
+                                print(formattedDate);
+
+                                setState(() {
+                                  datacontroller.text = formattedDate;
+                                });
+                              } else {
+                                print("Date is not selected");
+                              }
+                            },
                             onSaved: (newValue) {
                               fecha = newValue as String;
                             },
@@ -362,21 +381,17 @@ class _EventosState extends State<Eventos> {
                           },
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
                     ],
                   ),
-                  SizedBox(
-                    height: 20,
-                  ),
-
                   const SizedBox(
                     height: 20,
                   ),
-
-
-
+                  const SizedBox(
+                    height: 20,
+                  ),
                   const SizedBox(
                     height: 50,
                   ),
@@ -391,7 +406,7 @@ class _EventosState extends State<Eventos> {
                         ),
                       ),
                       child: const Text(
-                        'Submit Form',
+                        'Submit Evento',
                         style: TextStyle(fontSize: 18),
                       ),
                     ),

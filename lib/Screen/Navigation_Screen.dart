@@ -2,9 +2,9 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:ticketsprox/Screen/Home.dart';
 import 'package:ticketsprox/Screen/Registros/Eventos.dart';
-import 'package:ticketsprox/Screen/Registros/DetalleEvento.dart';
 import 'package:ticketsprox/Screen/Consultas/Eventos_C.dart';
 import 'package:ticketsprox/Screen/Registros/Asientos.dart';
+import 'package:ticketsprox/Screen/Registros/Secciones.dart';
 
 class NavigateScreen extends StatefulWidget {
   const NavigateScreen({super.key});
@@ -26,7 +26,7 @@ class _NavigateScreenState extends State<NavigateScreen> {
       )),
       pane: NavigationPane(
         header: Padding(
-          padding: const EdgeInsets.only(left: 20),
+          padding: const EdgeInsets.only(left: 10),
           child: DefaultTextStyle(
             style: FluentTheme.of(context).typography.title!,
             child: const Text('Tickets Prox'),
@@ -49,19 +49,13 @@ class _NavigateScreenState extends State<NavigateScreen> {
               icon: const Icon(FluentIcons.text_box),
               title: const Text('Secciones'),
               body: const Center(
-                child: DetalleEvento(),
+                child: Secciones(),
               )),
                PaneItem(
               icon: const Icon(FluentIcons.text_box),
               title: const Text('Asientos'),
               body: const Center(
                 child: Asientos(),
-              )),
-          PaneItem(
-              icon: const Icon(FluentIcons.accounts),
-              title: const Text('Consultas'),
-              body: const Center(
-                child: EventosCosulta(),
               )),
         ],
         selected: _currentidex,

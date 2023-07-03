@@ -1,26 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:intl/intl.dart';
 
-class DetalleEvento extends StatefulWidget {
-  const DetalleEvento({Key? key}) : super(key: key);
+class Secciones extends StatefulWidget {
+  const Secciones({super.key});
 
   @override
-  _DetalleEventoState createState() => _DetalleEventoState();
+  State<Secciones> createState() => _SeccionesState();
 }
 
-class _DetalleEventoState extends State<DetalleEvento> {
+class _SeccionesState extends State<Secciones> {
   final _formKey = GlobalKey<FormState>();
 
   List<dynamic> eventos = [];
 
-  @override
+ @override
   void initState() {
     super.initState();
     fetchData();
   }
 
-  Future<void> fetchData() async {
+    Future<void> fetchData() async {
     var url = Uri.parse('http://www.ticketsproxapia.somee.com/api/Eventos');
 
     try {
@@ -42,7 +43,6 @@ class _DetalleEventoState extends State<DetalleEvento> {
           eventos = filteredEventos;
           if (eventos.isNotEmpty) {
             OpcionSelect = eventos[0]['nombreEvento'];
-
           }
         });
 
@@ -57,48 +57,42 @@ class _DetalleEventoState extends State<DetalleEvento> {
 
   Future<void> SeccionesPost() async {
     var url = Uri.parse('http://www.ticketsproxapia.somee.com/api/Secciones');
+    
 
-    var data = {
-           "idSecciones": 0,
-          'idEventos': IdEvent,
-          'nombreSeccion': nombreSeccion,
-          'capacidad': cantidadPorSeccion,
-          'precio': precioPorTicket,
-    };
 
-    print('Data: $data');
-    var jsonData = jsonEncode(data);
+    secciones.forEach((datos) async {
+      var data = {
+        "idSecciones": 0,
+        'idEventos': datos['idEventos'],
+        'nombreSeccion': datos['nombreSeccion'],
+        'capacidad': datos['capacidad'],
+        'precio': datos['precio']
+      };
+      print('Data asignado: $data');
+      var jsonData = jsonEncode(data);
 
-    try {
-      var response = await http.post(
-        url,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: jsonData,
-      );
-
-      if (response.statusCode == 200) {
-        print('Evento creado con éxito');
-
-        print('Error al crear el evento: ${response.statusCode}');
+      try {
+        var response = await http.post(
+          url,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: jsonData,
+        );
+        if (response.statusCode == 201) {
+          print('Evento creado con éxito');
+          _formKey.currentState!.reset();
+        } else {
+          print('Error al crear el evento: ${response.statusCode}');
+        }
+      } catch (e) {
+        print('Error: $e');
       }
-    } catch (e) {
-      print('Error: $e');
-    }
+    });
   }
 
-  List<String> TipoEvento = [
-    'Selecciona un Evento',
-    'Artes y Teatro',
-    'Concierto',
-    'Conferencia',
-    'Educativo'
-  ];
-
-  String OpcionSelect = '';
+ String OpcionSelect = '';
   int selectedIdEventos = 0;
-
 
   String nombreSeccion = '';
   double precioPorTicket = 0.0;
@@ -112,7 +106,7 @@ class _DetalleEventoState extends State<DetalleEvento> {
     });
   }
 
-  List<Map<String, dynamic>> secciones = [];
+   List<Map<String, dynamic>> secciones = [];
   int IdEvent = 0;
   void _AggsubmitD() {
     bool isValid = _formKey.currentState!.validate();
@@ -122,7 +116,7 @@ class _DetalleEventoState extends State<DetalleEvento> {
       eventos.forEach((opcion) {
         if (opcion['nombreEvento'] == OpcionSelect) {
           IdEvent = opcion['idEventos'];
-          return; // Detener la iteración
+          return;
         }
       });
 
@@ -132,46 +126,53 @@ class _DetalleEventoState extends State<DetalleEvento> {
           'nombreSeccion': nombreSeccion,
           'capacidad': cantidadPorSeccion,
           'precio': precioPorTicket,
-         
         });
       });
       print('Secciones: $secciones');
     }
   }
 
+
+
+
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Detalle del Evento'),
+        title: const Text('Seccion Form'),
       ),
       body: Card(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(
+            Radius.circular(20),
           ),
-          margin: const EdgeInsets.all(20),
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Detalle del Evento',
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    const SizedBox(height: 20),
-
-                    Container(
+        ),
+        margin: const EdgeInsets.all(30),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text(
+                    "Datos del Seccion Evento",
+                    style: TextStyle(fontSize: 20),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Row(
+                    children: [
+                      Container(
                       width: 400,
                       height: 50,
                       child: DropdownButtonFormField<String>(
-                        value: eventos.isNotEmpty
-                            ? OpcionSelect
-                            : '',
-
+                        value: eventos.isNotEmpty ? OpcionSelect : '',
                         items: eventos.map((opcion) {
                           return DropdownMenuItem<String>(
                             value: opcion['nombreEvento'],
@@ -181,7 +182,6 @@ class _DetalleEventoState extends State<DetalleEvento> {
                         onChanged: (String? value) {
                           setState(() {
                             OpcionSelect = value!;
-                           
                           });
                         },
                         decoration: const InputDecoration(
@@ -189,13 +189,19 @@ class _DetalleEventoState extends State<DetalleEvento> {
                             border: OutlineInputBorder()),
                       ),
                     ),
-
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Row(
-                      children: [
-                        Container(
+                      const SizedBox(
+                        width: 20,
+                      ),
+                    
+                    
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Row(
+                    children: [
+                         Container(
                           width: 200,
                           height: 50,
                           child: TextFormField(
@@ -213,7 +219,8 @@ class _DetalleEventoState extends State<DetalleEvento> {
                             },
                           ),
                         ),
-                        const SizedBox(
+
+                         const SizedBox(
                           width: 20,
                         ),
                         Container(
@@ -238,6 +245,7 @@ class _DetalleEventoState extends State<DetalleEvento> {
                             },
                           ),
                         ),
+
                         const SizedBox(
                           width: 20,
                         ),
@@ -263,7 +271,8 @@ class _DetalleEventoState extends State<DetalleEvento> {
                             },
                           ),
                         ),
-                        const SizedBox(
+
+                            const SizedBox(
                           width: 20,
                         ),
                         Container(
@@ -276,13 +285,8 @@ class _DetalleEventoState extends State<DetalleEvento> {
                             ),
                           ),
                         ),
-
-                        
-                      ],
-                    ),
-
-                    const SizedBox(height: 20),
-                       Container(
+                         const SizedBox(width: 20),
+                        Container(
                           height: 60,
                           child: ElevatedButton(
                             onPressed: SeccionesPost,
@@ -292,11 +296,15 @@ class _DetalleEventoState extends State<DetalleEvento> {
                             ),
                           ),
                         ),
-                     const SizedBox(height: 20),
-
-                    //Table
-                    Container(
-                      width: 800,
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Row(
+                    children: [
+                      Container(
+                         width: 800,
                       height: 80,
                       child: Padding(
                         padding: EdgeInsets.all(8.0),
@@ -384,13 +392,41 @@ class _DetalleEventoState extends State<DetalleEvento> {
                             }).toList(),
                           ],
                         ),
-                      ),
-                    ),
-                  ],
-                ),
+                      )
+                       )
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  
+                 
+                 
+                 const  SizedBox(
+                    height: 20,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  const SizedBox(
+                    height: 50,
+                  ),
+                  const SizedBox(
+                    height: 50,
+                  ),
+                  const SizedBox(
+                    height: 50,
+                  ),
+                  const SizedBox(
+                    height: 500,
+                  ),
+                  
+                ],
               ),
             ),
-          )),
+          ),
+        ),
+      ),
     );
   }
 }
