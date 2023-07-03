@@ -101,7 +101,7 @@ class _EventosState extends State<Eventos> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: const Text('Detalle del Evento'),
+            title: const Text('Evento'),
             contentPadding: const EdgeInsets.all(20),
             content: const Text('Evento Guardado'),
             actions: [

@@ -4,6 +4,7 @@ import 'package:ticketsprox/Screen/Home.dart';
 import 'package:ticketsprox/Screen/Registros/Eventos.dart';
 import 'package:ticketsprox/Screen/Consultas/Eventos_C.dart';
 import 'package:ticketsprox/Screen/Registros/Asientos.dart';
+import 'package:ticketsprox/Screen/Registros/Login.dart';
 import 'package:ticketsprox/Screen/Registros/Secciones.dart';
 
 class NavigateScreen extends StatefulWidget {
@@ -57,6 +58,12 @@ class _NavigateScreenState extends State<NavigateScreen> {
               body: const Center(
                 child: Asientos(),
               )),
+              PaneItem(
+              icon: const Icon(FluentIcons.text_box),
+              title: const Text('Login'),
+              body: const Center(
+                child: LoginScreen(),
+              ))
         ],
         selected: _currentidex,
         displayMode: PaneDisplayMode.auto,
